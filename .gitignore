@@ -1,3 +1,7 @@
+# C files
+*.c
+*.h
+
 # Prerequisites
 *.d
 
