@@ -1,7 +1,7 @@
  [x] - Reconhecer palavras chave da linguagem.
- [ ] - Reconchecer identificadores com ate 15 caracteres.
+ [x] - Reconchecer identificadores com ate 15 caracteres.
  [x] - Reconhecer operadores aritmeticos, logicos e relacionais.
- [ ] - Comentários.
- [ ] - Desconsiderer outros simbolos.
- [ ] - Indicar alinha e coluna dos erros lexicos.
+ [x] - Comentários.
+ [x] - Desconsiderer outros simbolos.
+ [x] - Indicar alinha e coluna dos erros lexicos.
  [ ] - Incluir tokens na tabela de simbolos.

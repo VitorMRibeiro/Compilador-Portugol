@@ -6,18 +6,17 @@
 %token MATRIZ LOGICOS VARIAVEIS LOGICO OU ENTAO PARA INTEIROS FUNCAO INTEIRO INICIO E FIM_SE
 %token DE REAIS RETORNE REAL VERDADEIRO NAO ENQUANTO ATE CARACTERES PASSO 
 %token MAIS SUB DIV MUL
-%token IDENTIFICADOR DESCONHECIDO
+%token IDENTIFICADOR 
+%token ERRO
 
 %%
 
-regraInicial: qualquerCoisa;
-
-qualquerCoisa : | qualquerCoisa;
-
+regraInicial: ;
 %%
 
 int main(int argc, char** argv){
-    yyparse();
+    //yyparse();
+    while(yylex() != ERRO) {}
     return 0;
 }
 

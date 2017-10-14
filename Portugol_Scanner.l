@@ -1,3 +1,5 @@
+%option yylineno
+
 %{
 #include<stdio.h>
 #include"Portugol_Parser.tab.h"
@@ -42,9 +44,11 @@
 "passo"                 { return PASSO; }
 "+"                     { return MAIS; }
 "-"                     { return SUB; }
-"/"                     { return DIV; }
-"*"                     { return MUL; }
-[a-zA-Z][a-zA-Z0-9_]*   { printf("IDENTIFICADOR\n"); return IDENTIFICADOR; }
-
+"/"                                         { return DIV; }
+"*"                                         { return MUL; }
+[a-zA-Z][a-zA-Z0-9_]{0,15}                  { printf("IDENTIFICADOR\n"); return IDENTIFICADOR; }
+\\\\.*\n                                    { printf("COMENTARIO UMA LINHA\n"); }
+\\\*(([^\\\*])|(\\[^\*])|(\*[^\\]))*\*\\    { printf("COMENTARIO MULTI LINHA\n"); }
+.                                           { printf("erro lexico na linha %d\n", yylineno); return ERRO; }
 
 %%
