@@ -3,6 +3,9 @@
 %{
 #include<stdio.h>
 #include"Portugol_Parser.tab.h"
+#include"TabelaSimbolos.h"
+
+unsigned int hash(char*);
 %}
 
 %%
@@ -44,12 +47,25 @@
 "passo"                 { return PASSO; }
 "+"                     { return MAIS; }
 "-"                     { return SUB; }
+">="                    { return MAIOR_IGUAL; }
+">"                     { return MAIOR; }
+"<"                     { return MENOR; }
+"<="                    { return MENOR_IGUAL; }
+"="                     { return IGUAL; }
+"<>"                    { return DIFERENTE; }
 "/"                                         { return DIV; }
 "*"                                         { return MUL; }
 [a-zA-Z][a-zA-Z0-9_]{0,15}                  { printf("IDENTIFICADOR\n"); return IDENTIFICADOR; }
 \\\\.*\n                                    { printf("COMENTARIO UMA LINHA\n"); }
 \\\*(([^\\\*])|(\\[^\*])|(\*[^\\]))*\*\\    { printf("COMENTARIO MULTI LINHA\n"); }
-[ \n\t\r]+                                  { /* ignora espaços, tabulações e quebras de linha */ }
+[ \n\t\r]                                   { /* ignora espaços, tabulações e quebras de linha */ }
 .                                           { printf("erro lexico na linha %d\n", yylineno); return ERRO; }
 
 %%
+
+unsigned int hash(char* symbol){
+    unsigned int h = 0;
+    unsigned c;
+    while( c = *symbol++ ) h = h * 9 ^ c;
+    return h % SYM_TAB_SIZE;
+}
