@@ -49,6 +49,7 @@
 [a-zA-Z][a-zA-Z0-9_]{0,15}                  { printf("IDENTIFICADOR\n"); return IDENTIFICADOR; }
 \\\\.*\n                                    { printf("COMENTARIO UMA LINHA\n"); }
 \\\*(([^\\\*])|(\\[^\*])|(\*[^\\]))*\*\\    { printf("COMENTARIO MULTI LINHA\n"); }
+[ \n\t\r]+                                  { /* ignora espaços, tabulações e quebras de linha */ }
 .                                           { printf("erro lexico na linha %d\n", yylineno); return ERRO; }
 
 %%
