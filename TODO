@@ -4,4 +4,7 @@
  [x] - Comentários.
  [x] - Desconsiderer outros simbolos.
  [x] - Indicar alinha e coluna dos erros lexicos.
+ [ ] - implementar inserção na tabela de simbolos.
+ [ ] - implementar remoção na tabela de simbolos.
+ [ ] - implementar busca por nome na tabela de simbolos.
  [ ] - Incluir tokens na tabela de simbolos.
