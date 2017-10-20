@@ -57,7 +57,6 @@ void remover(const char* nome, id** lista){
             anterior = iterador;
             iterador = iterador->prox;
         }
-
     }
 }
 

@@ -2,8 +2,9 @@
 
 %{
 #include<stdio.h>
-#include"Portugol_Parser.tab.h"
+#include<stdlib.h>
 #include"TabelaSimbolos.h"
+#include"Portugol_Parser.tab.h"
 %}
 
 %%
@@ -59,11 +60,11 @@
 ";"                     { return PONTO_VIRGULA; }
 
 
-[0-9]+                                      { printf("CONSTANTE INTEIRO\n"); return CONSTANTE_INTEIRO; }
-[0-9]+\.[0-9]+                              { printf("CONSTANTE REAL\n"); return CONSTANTE_REAL; }
-\"[^\"\n]*\"                                { printf("CONSTANTE LITERAL\n"); return CONSTANTE_LITERAL; }
-\'[^\"\'\n]\'                               { printf("CONSTANTE CARACTERE\n"); return CONSTANTE_CARACTERE; }
-[a-zA-Z][a-zA-Z0-9_]{0,14}                  { printf("IDENTIFICADOR\n"); return IDENTIFICADOR; }
+[0-9]+                                      { printf("CONSTANTE INTEIRO\n"); yylval.inteiro = atoi(yytext); return CONSTANTE_INTEIRO; }
+[0-9]+\.[0-9]+                              { printf("CONSTANTE REAL\n"); yylval.real = atof(yytext); return CONSTANTE_REAL; }
+\"[^\"\n]*\"                                { printf("CONSTANTE LITERAL\n"); yylval.literal = yytext; return CONSTANTE_LITERAL; }
+\'[^\"\'\n]\'                               { printf("CONSTANTE CARACTERE\n"); yylval.caractere = yytext[0]; return CONSTANTE_CARACTERE; }
+[a-zA-Z][a-zA-Z0-9_]{0,14}                  { printf("IDENTIFICADOR\n"); yylval.nome = yytext; return IDENTIFICADOR; }
 \\\\.*\n                                    { printf("COMENTARIO UMA LINHA\n"); }
 \\\*(([^\\\*])|(\\[^\*])|(\*[^\\]))*\*\\    { printf("COMENTARIO MULTI LINHA\n"); }
 [ \n\t\r]                                   { /* ignora espaços, tabulações e quebras de linha */ }
