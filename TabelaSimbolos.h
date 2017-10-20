@@ -22,9 +22,8 @@ struct tokenVal{
     const char* nome;     // para identificadores.
 };
 typedef struct tokenVal YYSTYPE;
-#ifndef YYSTYPE_IS_DECLARED
-    #define YYSTYPE_IS_DECLARED 1
-#endif
+#define YYSTYPE_IS_DECLARED 1
+
 
 // declaração da tabela de simbolos.
 #ifndef tabelaSimbolos

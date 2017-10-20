@@ -60,13 +60,13 @@
 ";"                     { return PONTO_VIRGULA; }
 
 
-[0-9]+                                      { printf("CONSTANTE INTEIRO\n"); yylval.inteiro = atoi(yytext); return CONSTANTE_INTEIRO; }
-[0-9]+\.[0-9]+                              { printf("CONSTANTE REAL\n"); yylval.real = atof(yytext); return CONSTANTE_REAL; }
-\"[^\"\n]*\"                                { printf("CONSTANTE LITERAL\n"); yylval.literal = yytext; return CONSTANTE_LITERAL; }
-\'[^\"\'\n]\'                               { printf("CONSTANTE CARACTERE\n"); yylval.caractere = yytext[0]; return CONSTANTE_CARACTERE; }
-[a-zA-Z][a-zA-Z0-9_]{0,14}                  { printf("IDENTIFICADOR\n"); yylval.nome = yytext; return IDENTIFICADOR; }
-\\\\.*\n                                    { printf("COMENTARIO UMA LINHA\n"); }
-\\\*(([^\\\*])|(\\[^\*])|(\*[^\\]))*\*\\    { printf("COMENTARIO MULTI LINHA\n"); }
+[0-9]+                                      { yylval.inteiro = atoi(yytext); return CONSTANTE_INTEIRO; }
+[0-9]+\.[0-9]+                              { yylval.real = atof(yytext); return CONSTANTE_REAL; }
+\"[^\"\n]*\"                                { yylval.literal = yytext; return CONSTANTE_LITERAL; }
+\'[^\"\'\n]\'                               { yylval.caractere = yytext[0]; return CONSTANTE_CARACTERE; }
+[a-zA-Z][a-zA-Z0-9_]{0,14}                  { yylval.nome = yytext; return IDENTIFICADOR; }
+\\\\.*\n                                    {  }
+\\\*(([^\\\*])|(\\[^\*])|(\*[^\\]))*\*\\    {  }
 [ \n\t\r]                                   { /* ignora espaços, tabulações e quebras de linha */ }
 .                                           { printf("erro lexico na linha %d\n", yylineno); return ERRO; }
 
