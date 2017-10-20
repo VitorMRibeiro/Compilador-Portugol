@@ -1,5 +1,6 @@
 # C files
-*.c
+*tab.c
+*yy.c
 *.tab.h
 
 # Prerequisites

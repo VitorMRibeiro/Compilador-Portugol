@@ -1,21 +1,22 @@
 #define SYM_TAB_SIZE 999
 
-enum tipo {inteiro, real, logico, caractere};
+enum tipo {inteiro, real, logico, caractere, literal, funcao};
 
-struct var{
+struct id{
     enum tipo tipoVar;
     char* nome;
     void* endereco;
-    struct var* prox;
+    struct id* prox;
 };
-typedef struct var var;
+typedef struct id id;
 
-var* buscaNome(char*);
-void inserir(var*);
-void remover(char*);
+void inserir(id*);
+void remover(const char*);
+id* buscaNome(const char*);
+unsigned int hash(const char*);
 
 #ifndef tabelaSimbolos
-    var* tabelaSimbolos[SYM_TAB_SIZE];
+    id* tabelaSimbolos[SYM_TAB_SIZE];
 #else
     extern var* tabelaSimbolos[SYM_TAB_SIZE];
 #endif

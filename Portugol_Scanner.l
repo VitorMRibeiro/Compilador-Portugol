@@ -4,8 +4,6 @@
 #include<stdio.h>
 #include"Portugol_Parser.tab.h"
 #include"TabelaSimbolos.h"
-
-unsigned int hash(char*);
 %}
 
 %%
@@ -53,9 +51,19 @@ unsigned int hash(char*);
 "<="                    { return MENOR_IGUAL; }
 "="                     { return IGUAL; }
 "<>"                    { return DIFERENTE; }
-"/"                                         { return DIV; }
-"*"                                         { return MUL; }
-[a-zA-Z][a-zA-Z0-9_]{0,15}                  { printf("IDENTIFICADOR\n"); return IDENTIFICADOR; }
+"/"                     { return DIV; }
+"*"                     { return MUL; }
+"("                     { return ABRE_PARENTESES; }
+")"                     { return FECHA_PARENTESES; }
+","                     { return VIRGULA; }
+";"                     { return PONTO_VIRGULA; }
+
+
+[0-9]+                                      { printf("CONSTANTE INTEIRO\n"); return CONSTANTE_INTEIRO; }
+[0-9]+\.[0-9]+                              { printf("CONSTANTE REAL\n"); return CONSTANTE_REAL; }
+\"[^\"\n]*\"                                { printf("CONSTANTE LITERAL\n"); return CONSTANTE_LITERAL; }
+\'[^\"\'\n]\'                               { printf("CONSTANTE CARACTERE\n"); return CONSTANTE_CARACTERE; }
+[a-zA-Z][a-zA-Z0-9_]{0,14}                  { printf("IDENTIFICADOR\n"); return IDENTIFICADOR; }
 \\\\.*\n                                    { printf("COMENTARIO UMA LINHA\n"); }
 \\\*(([^\\\*])|(\\[^\*])|(\*[^\\]))*\*\\    { printf("COMENTARIO MULTI LINHA\n"); }
 [ \n\t\r]                                   { /* ignora espaços, tabulações e quebras de linha */ }
@@ -63,9 +71,3 @@ unsigned int hash(char*);
 
 %%
 
-unsigned int hash(char* symbol){
-    unsigned int h = 0;
-    unsigned c;
-    while( c = *symbol++ ) h = h * 9 ^ c;
-    return h % SYM_TAB_SIZE;
-}
