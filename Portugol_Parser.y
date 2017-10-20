@@ -20,7 +20,7 @@ regraInicial: ;
 
 int main(int argc, char** argv){
     //yyparse();
-    memset(tabelaSimbolos, 0, sizeof(var*) * SYM_TAB_SIZE); // inicializa tabela de simbolos com NULL.
+    memset(tabelaSimbolos, 0, sizeof(id*) * SYM_TAB_SIZE); // inicializa tabela de simbolos com NULL.
     while(yylex() != ERRO) {}
     return 0;
 }
