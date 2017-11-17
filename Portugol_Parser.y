@@ -30,32 +30,45 @@ extern int yylineno;
 
 %%
 
-inicio : declaracao_Algoritmo (bloco_Declaracao_Variaveis)? declaracao_Funcao* INICIO algoritmo FIM EOF;
+inicio : declaracao_Algoritmo bloco_Declaracao_Variaveis definicao_Funcoes INICIO bloco_Instrucoes FIM FIM_ARQUIVO;
 
 declaracao_Algoritmo : ALGORITMO IDENTIFICADOR PONTO_VIRGULA;
 
-bloco_Declaracao_Variaveis : VARIAVEIS declaracao_Variaveis FIM_VARIAVEIS;
+bloco_Declaracao_Variaveis :
+                           | VARIAVEIS declaracao_Variaveis FIM_VARIAVEIS
+                           ;
 
 declaracao_Variaveis 
-                   : IDENTIFICADOR ( "," IDENTIFICADOR)* DOIS_PONTOS INTEIRO    
-                   | IDENTIFICADOR ( "," IDENTIFICADOR)* DOIS_PONTOS LITERAL
-                   | IDENTIFICADOR ( "," IDENTIFICADOR)* DOIS_PONTOS CARACTERE
-                   | IDENTIFICADOR ( "," IDENTIFICADOR)* DOIS_PONTOS REAL
-                   | IDENTIFICADOR ( "," IDENTIFICADOR)* DOIS_PONTOS LOGICO
-                   
-                   | declaracao_Variaveis IDENTIFICADOR ( "," IDENTIFICADOR)* DOIS_PONTOS INTEIRO    
-                   | declaracao_Variaveis IDENTIFICADOR ( "," IDENTIFICADOR)* DOIS_PONTOS LITERAL
-                   | declaracao_Variaveis IDENTIFICADOR ( "," IDENTIFICADOR)* DOIS_PONTOS CARACTERE
-                   | declaracao_Variaveis IDENTIFICADOR ( "," IDENTIFICADOR)* DOIS_PONTOS REAL
-                   | declaracao_Variaveis IDENTIFICADOR ( "," IDENTIFICADOR)* DOIS_PONTOS LOGICO
+                   : identificadores DOIS_PONTOS INTEIRO PONTO_VIRGULA
+                   | identificadores DOIS_PONTOS LITERAL PONTO_VIRGULA
+                   | identificadores DOIS_PONTOS CARACTERE PONTO_VIRGULA
+                   | identificadores DOIS_PONTOS REAL PONTO_VIRGULA
+                   | identificadores DOIS_PONTOS LOGICO PONTO_VIRGULA
 
-definicao_Funcao : declaracao_Funcao bloco_Declaracao_Variaveis INICIO corpo_Funcao FIM
+                   | declaracao_Variaveis identificadores DOIS_PONTOS INTEIRO     PONTO_VIRGULA
+                   | declaracao_Variaveis identificadores DOIS_PONTOS LITERAL PONTO_VIRGULA
+                   | declaracao_Variaveis identificadores DOIS_PONTOS CARACTERE PONTO_VIRGULA
+                   | declaracao_Variaveis identificadores DOIS_PONTOS REAL PONTO_VIRGULA
+                   | declaracao_Variaveis identificadores DOIS_PONTOS LOGICO PONTO_VIRGULA
+                   ;
 
-declaracao_Funcao: FUNCAO IDENTIFICADOR ABRE_PARENTESES (|parametro|parametro (VIRGULA parametro)*) FECHA_PARENTESES DOIS_PONTOS INTEIRO
-                 | FUNCAO IDENTIFICADOR ABRE_PARENTESES (|parametro|parametro (VIRGULA parametro)*) FECHA_PARENTESES DOIS_PONTOS REAL
-                 | FUNCAO IDENTIFICADOR ABRE_PARENTESES (|parametro|parametro (VIRGULA parametro)*) FECHA_PARENTESES DOIS_PONTOS LITERAL
-                 | FUNCAO IDENTIFICADOR ABRE_PARENTESES (|parametro|parametro (VIRGULA parametro)*) FECHA_PARENTESES DOIS_PONTOS LOGICO
-                 | FUNCAO IDENTIFICADOR ABRE_PARENTESES (|parametro|parametro (VIRGULA parametro)*) FECHA_PARENTESES DOIS_PONTOS CARACTERE;
+identificadores: IDENTIFICADOR
+               | identificadores VIRGULA IDENTIFICADOR
+               ;
+
+definicao_Funcoes : 
+                  | definicao_Funcoes definicao_Funcao
+                  ;
+
+definicao_Funcao : declaracao_Funcao bloco_Declaracao_Variaveis INICIO bloco_Instrucoes FIM
+                 ;
+
+declaracao_Funcao: FUNCAO IDENTIFICADOR ABRE_PARENTESES parametros FECHA_PARENTESES DOIS_PONTOS INTEIRO
+                 | FUNCAO IDENTIFICADOR ABRE_PARENTESES parametros FECHA_PARENTESES DOIS_PONTOS REAL
+                 | FUNCAO IDENTIFICADOR ABRE_PARENTESES parametros FECHA_PARENTESES DOIS_PONTOS LITERAL
+                 | FUNCAO IDENTIFICADOR ABRE_PARENTESES parametros FECHA_PARENTESES DOIS_PONTOS LOGICO
+                 | FUNCAO IDENTIFICADOR ABRE_PARENTESES parametros FECHA_PARENTESES DOIS_PONTOS CARACTERE
+                 ;
 
 parametros : IDENTIFICADOR DOIS_PONTOS INTEIRO 
            | IDENTIFICADOR DOIS_PONTOS REAL
@@ -63,9 +76,14 @@ parametros : IDENTIFICADOR DOIS_PONTOS INTEIRO
            | IDENTIFICADOR DOIS_PONTOS LITERAL
            | IDENTIFICADOR DOIS_PONTOS LOGICO 
 
-algoritmo : "corpo algoritmo";
+           | parametros VIRGULA IDENTIFICADOR DOIS_PONTOS INTEIRO 
+           | parametros VIRGULA IDENTIFICADOR DOIS_PONTOS REAL
+           | parametros VIRGULA IDENTIFICADOR DOIS_PONTOS CARACTERE
+           | parametros VIRGULA IDENTIFICADOR DOIS_PONTOS LITERAL
+           | parametros VIRGULA IDENTIFICADOR DOIS_PONTOS LOGICO
+           ;
 
-corpo_Funcao : "corpo funcao";
+bloco_Instrucoes : IDENTIFICADOR ;
 
 
 %%
