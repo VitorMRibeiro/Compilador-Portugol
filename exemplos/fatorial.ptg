@@ -1,0 +1,20 @@
+algoritmo fatorial;
+
+variaveis
+    n: inteiro;
+fim-variaveis
+
+inicio
+    leia("digite um numero\n", n);
+    imprima(fatorial(n));
+fim
+
+funcao fatorial(n:inteiro):inteiro
+
+inicio
+    se n = 0 entao
+        retorne 1;
+    senao
+        retorne fatorial(n-1) * n;
+    fim-se
+fim

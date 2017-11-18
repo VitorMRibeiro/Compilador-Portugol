@@ -47,6 +47,7 @@ void yyerror(char* s);
 "ate"                   { return ATE; }
 "caracteres"            { return CARACTERES; }
 "passo"                 { return PASSO; }
+"**"                    { return EXP; }
 "+"                     { return MAIS; }
 "-"                     { return SUB; }
 ">="                    { return MAIOR_IGUAL; }
@@ -74,7 +75,7 @@ void yyerror(char* s);
 \/\*(([^\/\*])|(\/[^\*])|(\*[^\/]))*\*\/    { /* ignora comentarios multi linha */ }
 [ \n\t\r]                                   { /* ignora espaços, tabulações e quebras de linha */ }
 <<EOF>>                                      return FIM_ARQUIVO;
-.                                           { yyerror("simbolo nao pertence a linguagem\n"); return ERRO; }
+.                                           { yyerror("erro lexico"); return ERRO; }
 
 %%
 
