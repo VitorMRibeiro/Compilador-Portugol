@@ -68,7 +68,12 @@ void yyerror(char* s);
 
 [0-9]+                                      { yylval.inteiro = atoi(yytext); return CONSTANTE_INTEIRO; }
 [0-9]+\.[0-9]+                              { yylval.real = atof(yytext); return CONSTANTE_REAL; }
-\"[^\"\n]*\"                                { yylval.literal = yytext; return CONSTANTE_LITERAL; }
+\"[^\"\n]*\"                                { 
+                                                // TODO nao esquecer de desalocar essa memoria depois.
+                                                yylval.literal = malloc(sizeof(char) * (strlen(yytext) + 1));
+                                                strcpy(yylval.literal, yytext); 
+                                                return CONSTANTE_LITERAL; 
+                                            }
 \'[^\"\'\n]\'                               { yylval.caractere = yytext[0]; return CONSTANTE_CARACTERE; }
 [a-zA-Z][a-zA-Z0-9_]{0,14}                  { strcpy(yylval.nome, yytext); return IDENTIFICADOR; }
 \/\/.*\n                                    { /* ignora comentarios de uma linha */ }

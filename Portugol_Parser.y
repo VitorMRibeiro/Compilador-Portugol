@@ -13,7 +13,7 @@ extern int yylineno;
     int inteiro;
     char caractere;
     float real;
-    const char* literal;
+    char* literal;
     char nome[16];
 }
 
@@ -31,6 +31,7 @@ extern int yylineno;
 %left MAIS SUB
 %left MUL DIV
 %right EXP
+%nonassoc NEGATIVO
 
 
 %type <real> CONSTANTE_REAL  
@@ -132,7 +133,9 @@ expr: expr MAIS expr
     | expr SUB expr
     | expr MUL expr
     | expr DIV expr
+    | expr EXP expr
     | ABRE_PARENTESES expr FECHA_PARENTESES
+    | SUB expr %prec NEGATIVO
     | CONSTANTE_INTEIRO
     | CONSTANTE_REAL
     | CONSTANTE_CARACTERE
@@ -157,7 +160,7 @@ varios_Parametros_Reais: VIRGULA expr
 %%
 
 int main(int argc, char** argv){
-    memset(tabelaSimbolos, 0, sizeof(id*) * SYM_TAB_SIZE); // inicializa tabela de simbolos com NULL.
+    memset(tabelaSimbolos, 0, sizeof(simbolo*) * SYM_TAB_SIZE); // inicializa tabela de simbolos com NULL.
     yyparse();
     return 0;
 }
