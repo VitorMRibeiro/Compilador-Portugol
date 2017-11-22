@@ -1,0 +1,23 @@
+algoritmo soma;
+
+variaveis
+	x, y:inteiro;
+fim-variaveis
+
+inicio
+	leia("digite o primeiro valor", x, "digite o segundo valor", y);
+	imprima(soma(x, y));
+fim
+
+
+funcao soma(a:inteiro, b:inteiro):inteiro
+
+variaveis 
+	s:inteiro;
+fim-variaveis
+
+inicio
+	s := a + b;
+	retorne s;
+fim
+

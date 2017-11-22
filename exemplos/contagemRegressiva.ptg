@@ -1,0 +1,14 @@
+algoritmo contagem;
+
+variaveis
+    n:inteiro;
+fim-variaveis
+
+inicio
+    n := 10;
+    para x de 10 ate 1 passo -1 faca
+        imprima(x + "\n");
+    fim-para
+
+    imprima("lift off!\n");
+fim

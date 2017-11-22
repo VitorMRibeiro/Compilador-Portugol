@@ -1,0 +1,11 @@
+algoritmo strings;
+
+variaveis
+    s1, s2: literal;
+fim-variaveis
+
+inicio
+    s1 := "Ola";
+    s2 := "mundo";
+    imprima(s1 + ", " + s2 + "!\n");
+fim
