@@ -18,3 +18,13 @@ inicio
         retorne fatorial(n-1) * n;
     fim-se
 fim
+
+funcao fatorial(n:inteiro):inteiro
+
+inicio
+    se n = 0 entao
+        retorne 1;
+    senao
+        retorne fatorial(n-1) * n;
+    fim-se
+fim

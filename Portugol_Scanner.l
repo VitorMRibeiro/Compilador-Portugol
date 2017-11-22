@@ -74,7 +74,7 @@ void yyerror(char* s);
                                                 strcpy(yylval.literal, yytext); 
                                                 return CONSTANTE_LITERAL; 
                                             }
-\'[^\"\'\n]\'                               { yylval.caractere = yytext[0]; return CONSTANTE_CARACTERE; }
+\'[^\"\'\n]\'                               { yylval.caractere = yytext[1]; return CONSTANTE_CARACTERE; }
 [a-zA-Z][a-zA-Z0-9_]{0,14}                  { strcpy(yylval.nome, yytext); return IDENTIFICADOR; }
 \/\/.*\n                                    { /* ignora comentarios de uma linha */ }
 \/\*(([^\/\*])|(\/[^\*])|(\*[^\/]))*\*\/    { /* ignora comentarios multi linha */ }

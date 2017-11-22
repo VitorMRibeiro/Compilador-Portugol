@@ -10,11 +10,10 @@ unsigned int hash(const char* symbol){
     return h % SYM_TAB_SIZE;
 }
 
-bool compTipo(const char* nome, enum tipo compTipo){
-    simbolo* lista = tabelaSimbolos[hash(nome)];
+bool comparaTipo(const char* nome, int tipo){
     simbolo* i;
-    if(i = buscaNome(nome, lista)){
-        if( compTipo == i->tipoId )
+    if(i = buscaNome(nome)){
+        if( tipo == i->tipo )
             return true;
         else
             return false;
@@ -22,24 +21,14 @@ bool compTipo(const char* nome, enum tipo compTipo){
     else{
         return false;
     }
-    
 }
 
 void* endereco(const char* nome){
-    simbolo* lista = tabelaSimbolos[hash(nome)];
     simbolo* i;
-    if(i = buscaNome(nome, lista)){
+    if(i = buscaNome(nome)){
         return i->endereco;
     }
     return NULL;
-}
-
-bool busca(const char* nome){
-    simbolo* lista = tabelaSimbolos[hash(nome)];
-    if(buscaNome(nome, lista))
-        return true;
-    else
-        return false;
 }
 
 void inserir(simbolo* novoId, simbolo** lista){
@@ -49,7 +38,7 @@ void inserir(simbolo* novoId, simbolo** lista){
 
 void buscarInserir(const char* nomeId){
     simbolo** lista = &(tabelaSimbolos[hash(nomeId)]);
-    if(!buscaNome(nomeId, *lista)){
+    if(!buscaNome(nomeId)){
         simbolo* novoId;
         novoId = malloc(sizeof(simbolo));
         strcpy(novoId->nome, nomeId);
@@ -59,7 +48,8 @@ void buscarInserir(const char* nomeId){
     }
 }
 
-simbolo* buscaNome(const char* nome, simbolo* lista){
+simbolo* buscaNome(const char* nome){
+    simbolo* lista = tabelaSimbolos[hash(nome)];
     simbolo* iterador;
     iterador = lista;
     while(iterador != NULL){
@@ -71,27 +61,24 @@ simbolo* buscaNome(const char* nome, simbolo* lista){
     return NULL;
 }
 
-void definirTipo(const char* nome, enum tipo tipoId){
-    simbolo* lista = tabelaSimbolos[hash(nome)];
+void definirTipo(const char* nome, int tipo){
     simbolo* i;
-    if(i = buscaNome(nome, lista)){
-        i->tipoId = tipoId;
+    if(i = buscaNome(nome)){
+        i->tipo = tipo;
     }    
 }
 
 void inserirInteiro(const char* nome, int valor){
-    simbolo* lista = tabelaSimbolos[hash(nome)];
     simbolo* i;
-    if(i = buscaNome(nome, lista)){
+    if(i = buscaNome(nome)){
         i->endereco = malloc(sizeof(int));
         *(int*)(i->endereco) = valor;
     }
  }
 
 void inserirReal(const char* nome, float valor){
-    simbolo* lista = tabelaSimbolos[hash(nome)];
     simbolo* i;
-    if(i = buscaNome(nome, lista)){
+    if(i = buscaNome(nome)){
         i->endereco = malloc(sizeof(float));
         *(float*)(i->endereco) = valor;
     }
@@ -122,6 +109,5 @@ void remover(const char* nome, simbolo** lista){
         }
     }
 }
-
 
 

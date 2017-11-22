@@ -6,6 +6,6 @@ fim-variaveis
 
 inicio
     s1 := "Ola";
-    s1 := "mundo";
+    s2 := "mundo";
     imprima(s1 + ", " + s2 + "!\n");
 fim
