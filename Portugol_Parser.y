@@ -7,6 +7,9 @@ void yyerror(char* s);
 int yylex();
 extern int yylineno;
 
+node* arvores[10];
+const char* nomes[10];
+unsigned int i = 0;
 %}
 
 %union {
@@ -44,7 +47,7 @@ extern int yylineno;
 %type <AST_Node> se para enquanto alternativa
 %%
 
-inicio: declaracao_Algoritmo bloco_Declaracao_Variaveis INICIO bloco_Instrucoes FIM definicao_Funcoes { printf("algoritmo %s:\n", $1); imprimirArvore($4); printf("\n\n\n");};
+inicio: declaracao_Algoritmo bloco_Declaracao_Variaveis INICIO bloco_Instrucoes FIM definicao_Funcoes { arvores[i] = $4; nomes[i] = $1; i++ };
 
 declaracao_Algoritmo: ALGORITMO IDENTIFICADOR PONTO_VIRGULA { strcpy($$, $2); };
 
@@ -73,7 +76,7 @@ definicao_Funcoes:
                  | definicao_Funcoes definicao_Funcao 
                  ; 
 
-definicao_Funcao: cabecalho bloco_Declaracao_Variaveis INICIO bloco_Instrucoes FIM { printf("funcao %s:\n", $1); imprimirArvore($4); printf("\n\n\n")}
+definicao_Funcao: cabecalho bloco_Declaracao_Variaveis INICIO bloco_Instrucoes FIM { arvores[i] = $4; nomes[i] = $1; i++ }
                 ;
 
 cabecalho: FUNCAO IDENTIFICADOR ABRE_PARENTESES parametros FECHA_PARENTESES DOIS_PONTOS INTEIRO { strcpy($$, $2); }
@@ -165,8 +168,31 @@ varios_Parametros_Reais: VIRGULA expr
 %%
 
 int main(int argc, char** argv){
+    memset(arvores, 0, sizeof(node*) * 10);
     memset(tabelaSimbolos, 0, sizeof(simbolo*) * SYM_TAB_SIZE); // inicializa tabela de simbolos com NULL.
     yyparse();
+
+    FILE* arq;
+    arq = fopen("TreeVisualization\\treeData.js", "w");
+
+    fprintf(arq, "var treeData = [\n");
+    fprintf(arq, "\t\t{\n");
+    fprintf(arq, "\t\t\"name\" : \"no falso\",\n");
+    fprintf(arq, "\t\t\"children\" : [\n");
+    for(int j = 0; j < i; j++){
+        fprintf(arq, "\t\t{\n");
+        
+        criarJS(arvores[j], arq, nomes[j]);
+
+        if( i > j + 1 )
+            fprintf(arq, "\t\t},\n");
+        else
+            fprintf(arq, "\t\t}\n");
+    }
+    fprintf(arq, "\t\t]\n");
+    fprintf(arq, "\t}\n");
+    fprintf(arq, "]\n");
+
     return 0;
 }
 

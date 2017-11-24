@@ -1,3 +1,4 @@
+#include<stdio.h>
 #include<stdlib.h>
 #include<stdbool.h>
 #include"tabelaSimbolos.h"
@@ -127,5 +128,6 @@ node* novoReal(enum tipoNo tipo, float valor);
 node* novoInteiro(enum tipoNo, int valor);
 
 union valorExpressao avaliarArvore(node* no);
-void imprimirArvore(node* no);
+void criarJS(node*,  FILE*, const char*);
+void imprimirArvore(node* no, FILE*);
 void treeFree(node*);

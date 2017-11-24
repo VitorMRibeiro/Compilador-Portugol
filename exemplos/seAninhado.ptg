@@ -1,0 +1,14 @@
+algoritmo seAninhado;
+
+variaveis
+    x : inteiro;
+fim-variaveis
+
+inicio
+    leia("digite um valor para x", x);
+    se x >= 10 entao
+        se x <= 20 entao
+            imprima("x esta entre 10 e 20\n");
+        fim-se
+    fim-se
+fim
