@@ -1,5 +1,4 @@
 // funcoes de criacao e avaliacao da arvore sintatica
-#include<stdio.h>
 #include<string.h>
 #include"ArvoreSintatica.h"
 
@@ -88,134 +87,178 @@ node* novoUnario(enum tipoNo tipo, node* corpo){
     return (node*) novo;
 }
 
-void imprimeEnum(enum tipoNo);
+const char* enumToString(enum tipoNo);
 
-void imprimirArvore(node* no){
+void criarJS(node* no, FILE* arq, const char* nome){
+
+    fprintf(arq, "\t\t\"name\" : \"%s\",\n", nome);
+    fprintf(arq, "\t\t\"children\" : [\n");
+    fprintf(arq, "\t\t{\n");
+    
+    imprimirArvore(no, arq);
+
+    fprintf(arq, "\t\t}\n\t\t]");
+    
+}
+
+void imprimirArvore(node* no, FILE* arq){
     if( no != NULL){
-        imprimeEnum(no->tipo);
-        printf(" ( ");
+        fprintf(arq, "\t\t\"name\": \"%s\",\n", enumToString(no->tipo));
+        fprintf(arq, "\t\t\"children\": [\n");
         switch(no->tipo){
             case se: 
-                imprimirArvore(((struct se*)no)->condicao);
-                imprimirArvore(((struct se*)no)->se);
-                imprimirArvore(((struct se*)no)->senao);
+                fprintf(arq, "\t\t{\n");
+                imprimirArvore(((struct se*)no)->condicao, arq);
+                fprintf(arq, "\t\t},\n");
+                fprintf(arq, "\t\t{\n");
+                imprimirArvore(((struct se*)no)->se, arq);
+                fprintf(arq, "\t\t},\n");
+                fprintf(arq, "\t\t{\n");
+                imprimirArvore(((struct se*)no)->senao, arq);
+                fprintf(arq, "\t\t}\n");
                 break;
             case enquanto:
-                imprimirArvore(((struct enquanto*)no)->condicao);
-                imprimirArvore(((struct enquanto*)no)->corpo);
+                fprintf(arq, "\t\t{\n");
+                imprimirArvore(((struct enquanto*)no)->condicao, arq);
+                fprintf(arq, "\t\t},\n");
+                fprintf(arq, "\t\t{\n");
+                imprimirArvore(((struct enquanto*)no)->corpo, arq);
+                fprintf(arq, "\t\t}\n");
                 break;
             case para:
-                imprimirArvore(((struct para*)no)->corpo);
+                fprintf(arq, "\t\t{\n");
+                imprimirArvore(((struct para*)no)->corpo, arq);
+                fprintf(arq, "\t\t}\n");
                 break;
             case inteiro:
-                printf(" %d ", ((struct inteiro*)no)->valor);
+                fprintf(arq, "\t\t{\n");
+                fprintf(arq, "\t\t\"name\": \"%d\",\n", ((struct inteiro*)no)->valor, arq);
+                fprintf(arq, "\t\t}\n");
                 break;
             case real:
-                printf(" %f ", ((struct real*)no)->valor);
+                fprintf(arq, "\t\t{\n");
+                fprintf(arq, " \t\t\"name\" : \"%f\",\n ", ((struct real*)no)->valor, arq);
+                fprintf(arq, "\t\t}\n");
                 break;
             case literal:
-                printf(" %s ", ((struct literal*)no)->valor);
+                fprintf(arq, "\t\t{\n");
+                fprintf(arq, " \t\t\"name\" : \"%s\",\n ", ((struct literal*)no)->valor, arq);
+                fprintf(arq, "\t\t}\n");
                 break;
             case caractere:
-                printf(" %c ", ((struct caractere*)no)->valor);
+                fprintf(arq, "\t\t{\n");
+                fprintf(arq, " \t\t\"name\" : \"%c\",\n ", ((struct caractere*)no)->valor, arq);
+                fprintf(arq, "\t\t}\n");
                 break;
             case variavel:
-                printf("%s", ((struct variavel*)no)->nome);
+                fprintf(arq, "\t\t{\n");
+                fprintf(arq, "\t\t\"name\" : \"%s\",\n", ((struct variavel*)no)->nome, arq);
+                fprintf(arq, "\t\t}\n");
                 break;
             case funcao:
-                printf("%s", ((struct funcao*)no)->nome);
+                fprintf(arq, "\t\t{\n");
+                fprintf(arq, "\t\t\"name\" : \"%s\",\n", ((struct funcao*)no)->nome, arq);
+                fprintf(arq, "\t\t}\n");
                 break;
             case negativo:
-                imprimirArvore(((struct unario*)no)->corpo);
+                fprintf(arq, "\t\t{\n");
+                imprimirArvore(((struct unario*)no)->corpo, arq);
+                fprintf(arq, "\t\t}\n");
                 break;
             case retorne:
-                imprimirArvore(((struct unario*)no)->corpo);
+                fprintf(arq, "\t\t{\n");
+                imprimirArvore(((struct unario*)no)->corpo, arq);
+                fprintf(arq, "\t\t}\n");
                 break;
             default:
-                imprimirArvore(no->left);
-                imprimirArvore(no->right);
+                fprintf(arq, "\t\t{\n");
+                imprimirArvore(no->left, arq);
+                fprintf(arq, "\t\t},\n");
+                fprintf(arq, "\t\t{\n");
+                imprimirArvore(no->right, arq);
+                fprintf(arq, "\t\t}\n");
                 break;
         }
-        printf(" ) ");
+        fprintf(arq, "\t\t]\n");
     }
 }
 
 
-void imprimeEnum(enum tipoNo tipo){
+const char* enumToString(enum tipoNo tipo){
     switch(tipo){
         case se: 
-            printf("se");
+            return "se";
             break;
         case enquanto: 
-            printf("enquanto");
+            return "enquanto";
             break; 
         case para: 
-            printf("para");
+            return "para";
             break; 
         case soma: 
-            printf("soma");
+            return "soma";
             break; 
         case subtracao: 
-            printf("subtracao");
+            return "subtracao";
             break; 
         case multiplicacao: 
-            printf("multiplicacao");
+            return "multiplicacao";
             break;
         case divisao: 
-            printf("divisao");
+            return "divisao";
             break;
         case potencia: 
-            printf("potencia");
+            return "potencia";
             break;
         case negativo: 
-            printf("negativo");
+            return "negativo";
             break; 
         case inteiro: 
-            printf("inteiro");
+            return "inteiro";
             break; 
         case atribuicao: 
-            printf("atribuicao");
+            return "atribuicao";
             break;
         case retorne: 
-            printf("retorne");
+            return "retorne";
             break;
         case real: 
-            printf("real");
+            return "real";
             break; 
         case caractere: 
-            printf("caractere");
+            return "caractere";
             break; 
         case literal: 
-            printf("literal");
+            return "literal";
             break; 
         case variavel: 
-            printf("variavel");
+            return "variavel";
             break; 
         case funcao: 
-            printf("funcao");
+            return "funcao";
             break;
         case igual: 
-            printf("igual");
+            return "igual";
             break;
         case menor: 
-            printf("menor");
+            return "menor";
             break;
         case maior: 
-            printf("maior");
+            return "maior";
             break;
         case menorIgual: 
-            printf("menorIgual");
+            return "menorIgual";
             break;
         case maiorIgual: 
-            printf("maiorIgual");
+            return "maiorIgual";
             break;
         case diferente: 
-            printf("diferente");
+            return "diferente";
             break;
         case bloco:
-            printf("bloco");
+            return "bloco";
             break;
         defaul:
-            printf("bad node type");
+            return "bad node type";
     }
 }
