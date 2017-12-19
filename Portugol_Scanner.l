@@ -7,7 +7,7 @@
 #include"TabelaSimbolos.h"
 #include"Portugol_Parser.tab.h"
 
-void yyerror(char* s);
+extern void yyerror(const char* s);
 %}
 
 %%
@@ -74,13 +74,18 @@ void yyerror(char* s);
                                                 strcpy(yylval.literal, yytext); 
                                                 return CONSTANTE_LITERAL; 
                                             }
-\'[^\"\'\n]\'                               { yylval.caractere = yytext[1]; return CONSTANTE_CARACTERE; }
-[a-zA-Z][a-zA-Z0-9_]{0,14}                  { strcpy(yylval.nome, yytext); return IDENTIFICADOR; }
+\'[^\"\'\n]\'                               { yylval.caractere = yytext[0]; return CONSTANTE_CARACTERE; }
+[a-zA-Z][a-zA-Z0-9_]{0,14}                  { 
+                                                // TODO nao esquecer de desalocar essa memoria depois.
+                                                yylval.nome = malloc(sizeof(char) * (strlen(yytext) + 1));
+                                                strcpy(yylval.nome, yytext);
+                                                return IDENTIFICADOR;
+                                            }
 \/\/.*\n                                    { /* ignora comentarios de uma linha */ }
 \/\*(([^\/\*])|(\/[^\*])|(\*[^\/]))*\*\/    { /* ignora comentarios multi linha */ }
 [ \n\t\r]                                   { /* ignora espaços, tabulações e quebras de linha */ }
+.                                           { yyerror("erro lexico, simbolo invalido"); return ERRO; }
 <<EOF>>                                      return FIM_ARQUIVO;
-.                                           { yyerror("erro lexico"); return ERRO; }
 
 %%
 

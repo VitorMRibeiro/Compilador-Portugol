@@ -1,15 +1,32 @@
 algoritmo fatorial;
 
 variaveis
-    n: inteiro;
+    i: inteiro;
+    j:inteiro;
+    c:caractere;
+    c:caractere;
+    s:literal;
 fim-variaveis
 
 inicio
-    leia("digite um numero\n", n);
-    imprima(fatorial(n));
+    fatorial(10, 's', 1.3);
+    x := 1;
+    c:= 1;
+    c := 1.23;
+    j := 1.234;
+    s := "ola" + 5;
+    i := 1 + 1 * (3 - 1) ;
 fim
 
-funcao fatorial(n:inteiro):inteiro
+
+
+funcao fatorial(n:inteiro, c:caractere, r:real, i:inteiro):inteiro
+
+variaveis
+    n:inteiro;
+    m:real;
+    n:inteiro;
+fim-variaveis
 
 inicio
     se n = 0 entao

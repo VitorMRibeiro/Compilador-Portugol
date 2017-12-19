@@ -1,89 +1,100 @@
-// funcoes de criacao e avaliacao da arvore sintatica
 #include<string.h>
 #include"ArvoreSintatica.h"
 
-node* novoBasico(enum tipoNo tipo, node* left, node* right){
+node* novoBasico(enum tipoNo tipo, node* left, node* right, int linha){
     node* novoNo = malloc(sizeof(node));
     novoNo->tipo = tipo;
     novoNo->left = left;
     novoNo->right = right;
+    novoNo->linha = linha;
     return novoNo;
 }
 
-node* novoSe(enum tipoNo tipo, node* condicao, node* se, node* senao){
+node* novoSe(enum tipoNo tipo, node* condicao, node* se, node* senao, int linha){
     struct se* novo = malloc(sizeof(struct se));
     novo->tipo = tipo;
     novo->condicao = condicao;
     novo->se = se;
     novo->senao = senao;
+    novo->linha = linha;
     return (node*) novo;
 }
 
-node* novoEnquanto(enum tipoNo tipo, node* condicao, node* corpo){
+node* novoEnquanto(enum tipoNo tipo, node* condicao, node* corpo, int linha){
     struct enquanto* novo = malloc(sizeof(struct enquanto));
     novo->tipo = tipo;
     novo->condicao = condicao;
     novo->corpo = corpo;
+    novo->linha = linha;
     return (node*) novo;
 }
 
-node* novoPara(enum tipoNo tipo, const char* nome, int de, int ate, node* corpo){
+node* novoPara(enum tipoNo tipo, const char* nome, int de, int ate, int passo, node* corpo, int linha){
     struct para* novo = malloc(sizeof(struct para));
     novo->tipo = tipo;
-    novo->variavel = buscaNome(nome);
+    strcmp( &(novo->variavel[0]), nome);
     novo->de = de;
     novo->ate = ate;
+    novo->passo = passo;
     novo->corpo = corpo;
+    novo->linha = linha;
+    return (node*) novo;
 }
 
-node* novoFuncao(enum tipoNo tipo, const char* nome, struct parametro* listaParametros){
+node* novoFuncao(enum tipoNo tipo, const char* nome, struct parametroReal* listaParametros, int linha){
     struct funcao* novo = malloc(sizeof(struct funcao));
     novo->tipo = tipo;
-    novo->ref = buscaNome(nome);
-    novo->parametroReais = listaParametros;    
+    novo->parametrosReais = listaParametros;    
     strcpy(novo->nome, nome); // for debuging purposes.
+    novo->linha = linha;
     return (node*) novo;
 }
 
-node* novaVariavel(enum tipoNo tipo, const char* nome){
+node* novaVariavel(enum tipoNo tipo, const char* nome, int linha){
     struct variavel* novo = malloc(sizeof(struct variavel));
     novo->tipo = tipo;
-    novo->ref = buscaNome(nome);
     strcpy(novo->nome, nome); // for debuging purpose.
+    novo->linha = linha;
     return (node*) novo;
 }
 
-node* novoLiteral(enum tipoNo tipo, const char* valor){
+node* novoLiteral(enum tipoNo tipo, const char* valor, int linha){
     struct literal* novo = malloc(sizeof(struct literal));
     novo->tipo = tipo;
     novo->valor = valor;
+    novo->linha = linha;
     return (node*) novo;
 }
 
-node* novoCaractere(enum tipoNo tipo, char valor){
+node* novoCaractere(enum tipoNo tipo, char valor, int linha){
     struct caractere* novo = malloc(sizeof(struct caractere));
     novo->tipo = tipo;
     novo->valor = valor;
+    novo->linha = linha;
     return (node*) novo;
 }
 
-node* novoReal(enum tipoNo tipo, float valor){
+node* novoReal(enum tipoNo tipo, float valor, int linha){
     struct real* novo = malloc(sizeof(struct real));
     novo->tipo = tipo;
     novo->valor = valor;
+    novo->linha = linha;
     return (node*) novo;
 }
 
-node* novoInteiro(enum tipoNo tipo, int valor){
+node* novoInteiro(enum tipoNo tipo, int valor, int linha){
     struct inteiro* novo = malloc(sizeof(struct inteiro));
     novo->tipo = tipo;
+    novo->linha = linha;
     novo->valor = valor;
+    return (node*) novo;
 }
 
-node* novoUnario(enum tipoNo tipo, node* corpo){
+node* novoUnario(enum tipoNo tipo, node* corpo, int linha){
     struct unario* novo = malloc(sizeof(struct unario));
     novo->tipo = tipo;
     novo->corpo = corpo;
+    novo->linha = linha;
     return (node*) novo;
 }
 
@@ -142,7 +153,7 @@ void imprimirArvore(node* no, FILE* arq){
                 break;
             case literal:
                 fprintf(arq, "\t\t{\n");
-                fprintf(arq, " \t\t\"name\" : \"%s\",\n ", ((struct literal*)no)->valor, arq);
+                fprintf(arq, " \t\t\"name\" : %s,\n ", ((struct literal*)no)->valor, arq);
                 fprintf(arq, "\t\t}\n");
                 break;
             case caractere:
