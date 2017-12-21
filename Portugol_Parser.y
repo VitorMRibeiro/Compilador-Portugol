@@ -6,8 +6,8 @@
 void yyerror(const char* s);
 int yylex();
 extern int yylineno;
-extern node* algoritmo;
 const char* escopo;
+extern struct function_list* fList;
 %}
 
 %union {
@@ -52,7 +52,7 @@ const char* escopo;
 
 inicio: declaracao_Algoritmo bloco_Declaracao_Variaveis INICIO bloco_Instrucoes FIM definicao_Funcoes
 {
-    algoritmo = $4;
+    inserirListaFuncao(&fList, "algoritmo", $4);
 };
 
 declaracao_Algoritmo: ALGORITMO IDENTIFICADOR PONTO_VIRGULA { $$ = $2; escopo = "algoritmo"; };
@@ -121,8 +121,14 @@ definicao_Funcoes:
                  | definicao_Funcoes definicao_Funcao 
                  ; 
 
-definicao_Funcao: cabecalho bloco_Declaracao_Variaveis INICIO bloco_Instrucoes FIM { inserirCorpoFuncao($1, $4); }
-                ;
+definicao_Funcao: 
+
+cabecalho bloco_Declaracao_Variaveis INICIO bloco_Instrucoes FIM { 
+    inserirCorpoFuncao($1, $4); 
+    // adcionar funcao na lista de funcoes.
+    inserirListaFuncao(&fList, $1, $4);
+    
+};
 
 cabecalho: 
 
@@ -233,7 +239,7 @@ IDENTIFICADOR DOIS_PONTOS INTEIRO {
 bloco_Instrucoes:  { $$ = NULL; }
                 | atribuicao PONTO_VIRGULA      bloco_Instrucoes { $$ = novoBasico(bloco, $1, $3, yylineno); }
                 | chamada_Funcao PONTO_VIRGULA  bloco_Instrucoes { $$ = novoBasico(bloco, $1, $3, yylineno); } 
-                | RETORNE expr PONTO_VIRGULA    bloco_Instrucoes { $$ = novoBasico(bloco, novoUnario(retorne, $2, yylineno), $4, yylineno); }
+                | RETORNE expr PONTO_VIRGULA    bloco_Instrucoes { $$ = novoBasico(bloco, novoUnario(retorne, $2, yylineno - 1), $4, yylineno); }
                 | se                            bloco_Instrucoes { $$ = novoBasico(bloco, $1, $2, yylineno); } 
                 | enquanto                      bloco_Instrucoes { $$ = novoBasico(bloco, $1, $2, yylineno); }
                 | para                          bloco_Instrucoes { $$ = novoBasico(bloco, $1, $2, yylineno); }

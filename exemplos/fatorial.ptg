@@ -20,7 +20,7 @@ fim
 
 
 
-funcao fatorial(n:inteiro, c:caractere, r:real, i:inteiro):inteiro
+funcao fatorial(n:inteiro, c:caractere, r:real, i:inteiro)
 
 variaveis
     n:inteiro;
@@ -29,10 +29,11 @@ variaveis
 fim-variaveis
 
 inicio
-    se n = 0 entao
-        retorne 1;
+    retorne "ola";
+    se x = 0 entao
+        retorne 'a';
     senao
-        retorne fatorial(n-1) * n;
+        //retorne fatorial(n-1) * n;
     fim-se
 fim
 

@@ -1,7 +1,8 @@
 algoritmo strings;
 
 variaveis
-    s1, s2: literal;
+    s1: literal;
+    s2: literal;
 fim-variaveis
 
 inicio

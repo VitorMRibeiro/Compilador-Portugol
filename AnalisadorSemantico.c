@@ -3,7 +3,7 @@
 #include<string.h>
 #include"ArvoreSintatica.h"
 
-node* algoritmo;
+struct function_list* fList;
 extern void yyparse();
 extern void yyerror(const char* s);
 int treeWalker(node* root, const char* escopo);
@@ -25,13 +25,16 @@ int matrizCoercaoAtribuicao[][5] = {
 };
 
 int main(int argc, char** argv){
-    algoritmo = malloc(sizeof(node));
-
+    fList = NULL;
     memset(tabelaSimbolos, 0, sizeof(simbolo*) * SYM_TAB_SIZE); // inicializa tabela de simbolos com NULL.
     yyparse();
 
-    treeWalker(algoritmo, "algoritmo");
-
+    // percorre as arvores de todas as funcoes.
+    while( fList != NULL ){
+        printf("\nem: '%s'\n", fList->escopo);
+        treeWalker(fList->func, fList->escopo);
+        fList = fList->prox;
+    }
 }
 
 int treeWalker(node* root, const char* escopo){
@@ -146,18 +149,54 @@ int treeWalker(node* root, const char* escopo){
                 return var_inteiro;
                 break; 
             case atribuicao:
-                // TODO verificar se o tipo da expressão a direita bate com o tipo da variavel.
                 {
                     int Tipolval = treeWalker( root->left, escopo );
                     int Tiporval = treeWalker( root->right, escopo );
-                    if( !matrizCoercaoAtribuicao[Tiporval][Tipolval] && Tipolval != indefinido ){
-                        printf("Erro: tipo da variavel nao corresponde ao tipo atribuido, linha %d\n", root->linha);
+                    // verifica se o tipo atribuido bate com o tipo da variavel.
+                    if(Tipolval == Tiporval){
+                        // os tipos são iguais.
+                    }
+                    else{
+                        if( !matrizCoercaoAtribuicao[Tiporval][Tipolval] && Tipolval != indefinido ){
+                            // os tipos não são equivalentes.
+                            printf("Erro: tipo da variavel nao corresponde ao tipo atribuido, linha %d\n", root->linha);
+                        }
+                        else{
+                            // os tipos podem ser implicitamente convertidos.
+                            if( Tipolval != indefinido ){
+                                printf("Aviso: coersao de tipo na linha %d\n", root->linha);
+                            }
+                        }
                     }
                 }
                 break;
             case retorne:
-                // TODO verificar se o tipo de retorno bate com o declarado pela funcao.
-                treeWalker( ((struct unario*) root)->corpo, escopo );
+
+                if( !strcmp(escopo, "algoritmo") ){
+                    printf("Erro: retorno fora de funcao, linha %d\n", root->linha);
+                }
+                else{
+                    struct IDfuncao* f = (struct IDfuncao*) buscaNome(escopo, "algoritmo");
+                    int tipoExpr = treeWalker( ((struct unario*) root)->corpo, escopo );
+
+                    if( f->tipo_retorno == indefinido ){
+                        printf("Erro: funcao '%s' nao tem retorno, linha %d\n", escopo, root->linha);
+                        return indefinido;
+                    }
+                    // verifica se os tipos batem.
+                    if( f->tipo_retorno ==  tipoExpr ){
+                        // tipo de retorno bate com o esperado.
+                    }
+                    else{
+                        if( matrizCoercaoAtribuicao[tipoExpr][f->tipo_retorno] ){
+                            // o retorno pode ser implicitamente convertido.
+                            printf("Aviso: corsao de tipo na linha %d", root->linha);
+                        }
+                        else{
+                            printf("Erro: tipo do retorno invalido, linha %d\n", root->linha);
+                        }
+                    }
+                }
                 break;
             case real:
                 return var_real;
@@ -183,7 +222,9 @@ int treeWalker(node* root, const char* escopo){
                 {
                     struct IDfuncao* f;
                     if( f = (struct IDfuncao*)  buscaNome( ((struct funcao*) root)->nome, "algoritmo" ) ){
-                        // TODO verificar se os tipos dos parametros reais batem com os formais.
+                        if( !strcmp(escopo, f->nome) ){
+                            return f->tipo_retorno;
+                        }
                         struct parametroReal* pr = ((struct funcao*) root)->parametrosReais;
                         struct parametros* pf = f->listaParametros;
                         int i = 1;
@@ -197,11 +238,11 @@ int treeWalker(node* root, const char* escopo){
                                     }
                                 }
                                 else{
-                                    printf("Erro: muitos argumentos para a funcao '%s', linha %d\n", ((struct funcao*) root)->nome, root->linha);
+                                    printf("Erro: muitos argumentos para a funcao '%s', linha %d\n", f->nome, root->linha);
                                 }
                             }
                             else{
-                                printf("Erro: poucos argumentos para a funcao '%s', linha %d\n", ((struct funcao*) root)->nome, root->linha);
+                                printf("Erro: poucos argumentos para a funcao '%s', linha %d\n", f->nome, root->linha);
                             }
                             if( pr != NULL ){
                                 pr = pr->prox;
@@ -211,6 +252,7 @@ int treeWalker(node* root, const char* escopo){
                             }
                             i++;
                         }
+                        //treeWalker( (node*) f->corpo, f->nome);
                         return f->tipo_retorno;
                     }
                     else{

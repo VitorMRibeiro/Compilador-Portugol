@@ -45,6 +45,12 @@ struct node{
 };
 typedef struct node node;
 
+struct function_list{
+    node* func;
+    const char* escopo;
+    struct function_list* prox;
+};
+
 struct se{
     enum tipoNo tipo;
     int linha;
@@ -131,6 +137,7 @@ node* novoReal(enum tipoNo tipo, float valor, int linha);
 node* novoInteiro(enum tipoNo, int valor, int linha);
 
 union valorExpressao avaliarArvore(node* no);
+void inserirListaFuncao(struct function_list** lista, const char* nome, node* arvore);
 void criarJS(node*,  FILE*, const char*);
 void imprimirArvore(node* no, FILE*);
 void treeFree(node*);

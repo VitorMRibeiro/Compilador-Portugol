@@ -98,6 +98,14 @@ node* novoUnario(enum tipoNo tipo, node* corpo, int linha){
     return (node*) novo;
 }
 
+void inserirListaFuncao(struct function_list** lista, const char* nome, node* arvore){
+    struct function_list* novo = malloc(sizeof(struct function_list));
+    novo->escopo = nome;
+    novo->func = arvore;
+    novo->prox = *lista;
+    *lista = novo;
+}
+
 const char* enumToString(enum tipoNo);
 
 void criarJS(node* no, FILE* arq, const char* nome){
